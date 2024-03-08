@@ -244,11 +244,11 @@ class DebugModule(Module):
 
 # CV32E41P-HIDS -----------------------------------------------------------------------------------------
 
-class CV32E41P_NWSEC(CPU):
+class CV32E41P_DIWALL(CPU):
     category             = "softcore"
     family               = "riscv"
-    name                 = "cv32e41p_nwsec"
-    human_name           = "CV32E41P_NWSEC"
+    name                 = "cv32e41p_diwall"
+    human_name           = "CV32E41P_DIWALL"
     variants             = CPU_VARIANTS
     data_width           = 32
     endianness           = "little"
@@ -261,7 +261,7 @@ class CV32E41P_NWSEC(CPU):
     @property
     def gcc_flags(self):
         flags = GCC_FLAGS[self.variant]
-        flags += "-D__cv32e41p_nwsec__ "
+        flags += "-D__cv32e41p_diwall__ "
         return flags
     HIDS_SYNTH              = ["HIDS_SYNTH"]
     HIDS_SIM              = ["HIDS_SIM"] 
@@ -269,7 +269,7 @@ class CV32E41P_NWSEC(CPU):
     def __init__(self, platform, variant="standard"):
         self.platform          = platform
         self.variant           = variant
-        self.human_name        = CPU_VARIANTS.get(variant, "cv32e41p_nwsec")
+        self.human_name        = CPU_VARIANTS.get(variant, "cv32e41p_diwall")
         self.reset             = Signal()
         self.ibus              = wishbone.Interface()
         self.dbus              = wishbone.Interface()
