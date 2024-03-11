@@ -13,7 +13,7 @@ from migen.fhdl.specials import Tristate
 from litex import get_data_mod
 from litex.soc.interconnect import wishbone, stream
 from litex.soc.interconnect.csr import *
-from litex.soc.cores.cpu import CPU, CPU_GCC_TRIPLE_RISCV32
+from cv32e41p_diwall.cpu import CPU, CPU_GCC_TRIPLE_RISCV32
 
 # Variants -----------------------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ apb_layout = [
 # Helpers ------------------------------------------------------------------------------------------
 
 def add_manifest_sources(platform, manifest):
-    basedir = get_data_mod("cpu", "cv32e41p_nwsec").data_location
+    basedir = get_data_mod("cpu", "cv32e41p_diwall").data_location
     with open(os.path.join(basedir, manifest), 'r') as f:
         for l in f:
             res = re.search('\$\{DESIGN_RTL_DIR\}/(.+)', l)
@@ -266,7 +266,7 @@ class CV32E41P_DIWALL(CPU):
     HIDS_SYNTH              = ["HIDS_SYNTH"]
     HIDS_SIM              = ["HIDS_SIM"] 
 
-    def __init__(self, platform, variant="standard"):
+    def __init__(self, platform, variant="HIDS_SYNTH"):
         self.platform          = platform
         self.variant           = variant
         self.human_name        = CPU_VARIANTS.get(variant, "cv32e41p_diwall")
