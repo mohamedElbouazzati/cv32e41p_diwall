@@ -277,6 +277,15 @@ class CV32E41P_DIWALL(CPU):
         self.memory_buses      = []
         self.interrupt         = Signal(16)
         self.interrupt_padding = Signal(16)
+        alert_counter_jam =Signal(32)
+        alert_counter_bo = Signal(32)
+        alert_jam = Signal()
+        alert_bo = Signal(2)
+        self._alert_counter_jam        = CSRStorage(len(alert_counter_jam),description="Alert counter jamming")     
+        self._alert_counter_bo        = CSRStorage(len(alert_counter_bo),description="Alert counter buffer overflow")     
+        self._alert_jam        = CSRStorage(len(alert_jam),description="Alert jamming") 
+            # 11 heap overflow 10 stack overflow
+        self._alert_bo        = CSRStorage(len(alert_bo),description="Alert buffer overflow")     
 
         ibus = Record(obi_layout)
         dbus = Record(obi_layout)
@@ -284,11 +293,15 @@ class CV32E41P_DIWALL(CPU):
         # OBI <> Wishbone.
         self.submodules.ibus_conv = OBI2Wishbone(ibus, self.ibus)
         self.submodules.dbus_conv = OBI2Wishbone(dbus, self.dbus)
-
+       
         self.comb += [
             ibus.we.eq(0),
             ibus.be.eq(1111),
         ]
+        self.sync += self._alert_counter_jam.storage.eq(alert_counter_jam)
+        self.sync += self._alert_counter_bo.storage.eq(alert_counter_bo)
+        self.sync += self._alert_jam.storage.eq(alert_jam)
+        self.sync += self._alert_bo.storage.eq(alert_bo)
 
         self.cpu_params = dict(
             # Clk / Rst.
@@ -332,6 +345,10 @@ class CV32E41P_DIWALL(CPU):
 
             # CPU Control.
             i_fetch_enable_i = 1,
+            o_alert_counter_jam = alert_counter_jam,
+            o_alert_counter_bo =alert_counter_bo,
+            o_alert_jam = alert_jam, 
+            o_alert_bo = alert_bo ,
         )
 
         # Add Verilog sources.
